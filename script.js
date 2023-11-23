@@ -75,7 +75,7 @@ backBtn.addEventListener('click', function() {
 })
 
 shuffleWords.addEventListener('click', function() {
-    arr.sort(() => Math.random() - 0.5);
+    arr.sort(() => Math.random());
     createCard(arr[currentIndex])
 })
 
@@ -101,7 +101,7 @@ function cardInsert() {
         newArray.push(createTestCard(array.title))
     });
 
-    fragment.append(...newArray.sort(() => Math.random() - 0.5))
+    fragment.append(...newArray.sort(() => Math.random()))
     examCards.innerHTML = '';
     examCards.append(fragment);
 }
