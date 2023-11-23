@@ -8,14 +8,15 @@ const flipCard = document.querySelector('.flip-card');
 const cardFront = document.getElementById('card-front');
 const frontTitle = document.querySelector('.front-title');
 const cardBack = document.getElementById('card-back');
+const foreignWord = cardFront.querySelector('h1');
+const translateWord = cardBack.querySelector('h1')
 const backTitle = document.querySelector('.back-title');
 const example = document.querySelector('span');
 const backBtn = document.getElementById('back');
 const nextBtn = document.getElementById('next');
-const testing = document.getElementById('exam');
-
-
-
+const testingBtn = document.getElementById('exam');
+const studyCards = document.querySelector('.study-cards');
+const examCards = document.querySelector('.exam-card');
 
 
 function random(max) {
@@ -40,28 +41,24 @@ const items5 = new Items('shop', 'магазин', ' I took the car to the shop 
 const arr = [items1, items2, items3, items4, items5];
 
 slider.addEventListener('click', function() {
-    if (flipCard.classList.contains('active')) {
-        flipCard.classList.remove('active')
-    } else {
-        flipCard.classList.add('active')
-    }
+    flipCard.classList.toggle('active');
 });
 
-let currentIndex;
+let currentIndex = 0;
 
-function prepareCard(content) {
+function createCard(content) {
     currentWord.textContent = currentIndex + 1;
-    frontTitle.textContent = content.title;
-    backTitle.textContent = content.translation;
+    foreignWord.textContent = content.title;
+    translateWord.textContent = content.translation;
     example.textContent = content.example;
     wordProgress.value = (currentIndex + 1) / arr.length * 100;
 }
 
-prepareCard(arr[currentIndex]);
+createCard(arr[currentIndex]);
 
 nextBtn.addEventListener('click', function() {
     currentIndex++;
-    prepareCard(arr[currentIndex]);
+    createCard(arr[currentIndex]);
     backBtn.removeAttribute('disabled');
     if (currentIndex == arr.length - 1) {
         nextBtn.disabled = true;
@@ -70,7 +67,7 @@ nextBtn.addEventListener('click', function() {
 
 backBtn.addEventListener('click', function() {
     currentIndex--;
-    prepareCard(arr[currentIndex]);
+    createCard(arr[currentIndex]);
     nextBtn.removeAttribute('disabled');
     if (currentIndex == 0) {
         backBtn.disabled = true
@@ -79,23 +76,20 @@ backBtn.addEventListener('click', function() {
 
 shuffleWords.addEventListener('click', function() {
     arr.sort(() => Math.random() - 0.5);
-    prepareCard(arr[currentIndex])
+    createCard(arr[currentIndex])
 })
 
 totalWord.textContent = arr.length;
-
-const studyCards = document.querySelector('.study-cards');
-const examCards = document.querySelector('.exam-card');
 
 let selectedCard;
 
 function createTestCard(object) {
     const divElement = document.createElement('div');
     divElement.classList.add('card');
-    const pElement = document.createElement('p');
-    pElement.textContent = object;
+    const elementP = document.createElement('p');
+    elementP.textContent = object;
     divElement.append(pElement);
-    divElement.addEventListener('click', () => checkTranslationHandler(divElement));
+    divElement.addEventListener('click', () => checkTranslation(divElement));
     return divElement;
 }
 
@@ -112,7 +106,45 @@ function cardInsert() {
     examCards.append(fragment);
 }
 
-testing.addEventListener('click', function() {
+testingBtn.addEventListener('click', function() {
     studyCards.classList.add('hidden');
     cardInsert()
 })
+
+function checkTranslation(currentCard) {
+    if (!selectedCard) {
+        const allCards = document.querySelectorAll('.card');
+        allCards.forEach(card => {
+            card.classList.remove('correct');
+            card.classList.remove('wrong');
+        })
+        currentCard.style.pointerEvents = 'none';
+        currentCard.classList.add('correct');
+        selectedCard = currentCard;
+    } else {
+        const wordObject = arr.find(word => word.translation === selectedCard.textContent || word.title === selectedCard.textContent);
+        if (wordObject.translation === currentCard.textContent || wordObject.title === currentCard.textContent) {
+            currentCard.style.pointerEvents = 'none';
+            currentCard.classList.add('correct');
+            currentCard.classList.add('fade-out');
+            selectedCard.classList.add('fade-out');
+            let allCardsFaded = true;
+            allCards.forEach(card => {
+                if (!card.classList.contains('fade-out')) {
+                    allCardsFaded = false;
+                }
+            });
+            if (allCardsFaded) {
+                setTimeout(() => {
+                    alert('Ты справилась!');
+                }, 500);
+            }
+        } else {
+            currentCard.classList.add('wrong');
+            currentCard.style.pointerEvents = 'all';
+            selectedCard.style.pointerEvents = 'all';
+        }
+    }
+}
+
+/* я не могу понять, где у меня ошибка, так как у меня пример слова находится там, где должен быть номер карточки   */
