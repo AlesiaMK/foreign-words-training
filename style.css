@@ -270,8 +270,8 @@ progress {
 .clock {
     position: absolute;
     top: 80%;
-    width: 99%;
-    margin: 0 auto;
+    width: 100%;
+    margin: 0 -610px;
     font-size: 60px;
     font-family: Verdana, Arial, Sans-serif;
     text-align: center;
