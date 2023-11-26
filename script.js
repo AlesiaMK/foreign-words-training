@@ -1,28 +1,25 @@
-const currentWord = document.getElementById('current-word');
-const totalWord = document.getElementById('total-word');
-const wordProgress = document.getElementById('words-progress');
-const shuffleWords = document.getElementById('shuffle-words');
-const examProgress = document.getElementById('exam-progress');
+"use strict";
+
+const currentWord = document.querySelector('#current-word');
+const totalWord = document.querySelector('#total-word');
+const wordProgress = document.querySelector('#words-progress');
+const shuffleWords = document.querySelector('#shuffle-words');
+const examProgress = document.querySelector('#exam-progress');
 const slider = document.querySelector('.slider');
 const flipCard = document.querySelector('.flip-card');
-const cardFront = document.getElementById('card-front');
+const cardFront = document.querySelector('#card-front');
 const frontTitle = document.querySelector('.front-title');
-const cardBack = document.getElementById('card-back');
+const cardBack = document.querySelector('#card-back');
 const foreignWord = cardFront.querySelector('h1');
 const translateWord = cardBack.querySelector('h1')
 const backTitle = document.querySelector('.back-title');
-const example = document.querySelector('span');
-const backBtn = document.getElementById('back');
-const nextBtn = document.getElementById('next');
-const testingBtn = document.getElementById('exam');
+const example = document.querySelector('#card-back span');
+const backBtn = document.querySelector('#back');
+const nextBtn = document.querySelector('#next');
+const testingBtn = document.querySelector('#exam');
 const studyCards = document.querySelector('.study-cards');
-const examCards = document.querySelector('.exam-card');
+const examCards = document.querySelector('#exam-card');
 
-
-function random(max) {
-    let rand = Math.random() * (max + 1);
-    Math.floor(rand)
-};
 
 class Items {
     constructor(title, translation, example) {
@@ -52,6 +49,7 @@ function createCard(content) {
     translateWord.textContent = content.translation;
     example.textContent = content.example;
     wordProgress.value = (currentIndex + 1) / arr.length * 100;
+
 }
 
 createCard(arr[currentIndex]);
@@ -60,7 +58,7 @@ nextBtn.addEventListener('click', function() {
     currentIndex++;
     createCard(arr[currentIndex]);
     backBtn.removeAttribute('disabled');
-    if (currentIndex == arr.length - 1) {
+    if (currentIndex === arr.length - 1) {
         nextBtn.disabled = true;
     }
 })
@@ -69,14 +67,14 @@ backBtn.addEventListener('click', function() {
     currentIndex--;
     createCard(arr[currentIndex]);
     nextBtn.removeAttribute('disabled');
-    if (currentIndex == 0) {
+    if (currentIndex === 0) {
         backBtn.disabled = true
     }
 })
 
 shuffleWords.addEventListener('click', function() {
-    arr.sort(() => Math.random());
-    createCard(arr[currentIndex])
+    arr.sort(() => Math.random() - 0.5);
+    createCard(arr[currentIndex]);
 })
 
 totalWord.textContent = arr.length;
@@ -88,7 +86,7 @@ function createTestCard(object) {
     divElement.classList.add('card');
     const elementP = document.createElement('p');
     elementP.textContent = object;
-    divElement.append(pElement);
+    divElement.append(elementP);
     divElement.addEventListener('click', () => checkTranslation(divElement));
     return divElement;
 }
@@ -101,7 +99,7 @@ function cardInsert() {
         newArray.push(createTestCard(array.title))
     });
 
-    fragment.append(...newArray.sort(() => Math.random()))
+    fragment.append(...newArray.sort(() => Math.random() - 0.5))
     examCards.innerHTML = '';
     examCards.append(fragment);
 }
@@ -112,8 +110,8 @@ testingBtn.addEventListener('click', function() {
 })
 
 function checkTranslation(currentCard) {
+    const allCards = document.querySelectorAll('.card');
     if (!selectedCard) {
-        const allCards = document.querySelectorAll('.card');
         allCards.forEach(card => {
             card.classList.remove('correct');
             card.classList.remove('wrong');
@@ -144,7 +142,22 @@ function checkTranslation(currentCard) {
             currentCard.style.pointerEvents = 'all';
             selectedCard.style.pointerEvents = 'all';
         }
+        selectedCard = null;
     }
 }
 
-/* я не могу понять, где у меня ошибка, так как у меня пример слова находится там, где должен быть номер карточки   */
+window.onload = function() {
+    setInterval(function() {
+
+        let seconds = new Date().getSeconds();
+        document.getElementById("seconds").innerHTML = (seconds < 10 ? '0' : '') + seconds;
+
+
+        let minutes = new Date().getMinutes();
+        document.getElementById("minutes").innerHTML = (minutes < 10 ? '0' : '') + minutes;
+
+
+        let hours = new Date().getHours();
+        document.getElementById("hours").innerHTML = (hours < 10 ? '0' : '') + hours;
+    }, 1000);
+}
