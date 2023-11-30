@@ -8,17 +8,15 @@ const examProgress = document.querySelector('#exam-progress');
 const slider = document.querySelector('.slider');
 const flipCard = document.querySelector('.flip-card');
 const cardFront = document.querySelector('#card-front');
-const frontTitle = document.querySelector('.front-title');
 const cardBack = document.querySelector('#card-back');
 const foreignWord = cardFront.querySelector('h1');
 const translateWord = cardBack.querySelector('h1')
-const backTitle = document.querySelector('.back-title');
 const example = document.querySelector('#card-back span');
 const backBtn = document.querySelector('#back');
 const nextBtn = document.querySelector('#next');
 const testingBtn = document.querySelector('#exam');
 const studyCards = document.querySelector('.study-cards');
-const examCards = document.querySelector('#exam-card');
+const examCards = document.querySelector('#exam-cards');
 
 
 class Items {
@@ -39,7 +37,15 @@ const arr = [items1, items2, items3, items4, items5];
 
 slider.addEventListener('click', function() {
     flipCard.classList.toggle('active');
+    localStorage.setItem('word', JSON.stringify(arr[currentIndex]))
 });
+
+
+try {
+    arr[currentIndex] = JSON.parse(localStorage.getItem('word') || '[]')
+} catch (err) {
+    console.log(err);
+}
 
 let currentIndex = 0;
 
