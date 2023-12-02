@@ -37,15 +37,8 @@ const arr = [items1, items2, items3, items4, items5];
 
 slider.addEventListener('click', function() {
     flipCard.classList.toggle('active');
-    localStorage.setItem('word', JSON.stringify(arr[currentIndex]))
+
 });
-
-
-try {
-    arr[currentIndex] = JSON.parse(localStorage.getItem('word') || '[]')
-} catch (err) {
-    console.log(err);
-}
 
 let currentIndex = 0;
 
